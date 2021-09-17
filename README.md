@@ -4,3 +4,5 @@
     - This sql file contains a query into showing the users in current database and show casing the tables inside the database!
 2. `tables_exercises.sql`
     - This file is a simple query to show case the tables in a DB and displaying the contents of tables (their datatypes)
+3. `select_exercises.sql`
+    - This file contains exercises for learning onto how to excute and find items in a table via `Select` `Distinct` `FROM` `WHERE` and using operator commands
