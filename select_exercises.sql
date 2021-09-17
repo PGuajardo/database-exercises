@@ -2,18 +2,23 @@ USE albums_db;
 
 SHOW tables;
 DESCRIBE albums;
+
+-- 3
 -- a. How many rows are in the albums table?
 # 31 Rows
 SELECT * FROM albums;
+
 -- b. How many unique artist names are in the albums table?
 # 31
-SELECT DISTINCT arist FROM albums;
+SELECT DISTINCT artist FROM albums;
+
 -- c. What is the primary key for the albums table?
 SELECT id FROM albums;
--- d. What is the oldest release date for any album in the albums table? What is the most recent release date?
 
-SELECT * FROM albums WHERE release_date = '2011';
-SELECT * FROM albums WHERE release_date = '1967';
+-- d. What is the oldest release date for any album in the albums table? What is the most recent release date?
+SELECT * FROM albums WHERE release_date = 2011 AND release_date = 1967;
+SELECT MAX(release_date) AS 'Recent Release', MIN(release_date) AS 'Oldest Release' FROM albums;
+
 -- 4
 -- a. The name of all albums by Pink Floyd
 SELECT name FROM albums WHERE artist = 'Pink Floyd';
