@@ -1,0 +1,9 @@
+show tables;
+describe employees;
+describe departments;
+describe salaries;
+describe titles;
+describe dept_manager;
+describe dept_emp_latest_date;
+describe dept_emp;
+describe current_dept_emp;
