@@ -16,7 +16,7 @@ SELECT DISTINCT artist FROM albums;
 SELECT id FROM albums;
 
 -- d. What is the oldest release date for any album in the albums table? What is the most recent release date?
-SELECT * FROM albums WHERE release_date = 2011 AND release_date = 1967;
+-- SELECT release_date FROM albums WHERE release_date = 2011 AND release_date = 1967;
 SELECT MAX(release_date) AS 'Recent Release', MIN(release_date) AS 'Oldest Release' FROM albums;
 
 -- 4
