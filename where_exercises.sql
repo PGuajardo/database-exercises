@@ -23,7 +23,7 @@ GROUP BY first_name;
 
 -- Find all current or previous employees with first names 'Irena', 'Vidya', or 'Maya', using OR, and who is male. Enter a comment with the number of records returned.
 SELECT COUNT(first_name) AS 'Record of names', 
-	first_name 
+	first_name, gender 
 FROM employees 
 WHERE (first_name = 'Irena' AND gender = 'M') OR (first_name = 'Vidya' AND gender = 'M') OR (first_name = 'Maya' AND gender = 'M')
 GROUP BY first_name, gender;
@@ -40,7 +40,7 @@ GROUP BY last_name;
 
 -- Find all current or previous employees whose last name starts or ends with 'E'. Enter a comment with the number of employees whose last name starts or ends with E. How many employees have a last name that ends with E, but does not start with E?
 
-SELECT last_name 
+SELECT * 
 FROM employees 
 WHERE last_name LIKE 'E%' OR last_name LIKE '%E';
 -- 30723
@@ -58,6 +58,11 @@ FROM employees
 WHERE last_name LIKE 'E%' AND last_name LIKE '%E';
 -- 899
 
+SELECT *
+FROM employees
+WHERE last_name LIKE '%E';
+-- 24292
+
 -- Find all current or previous employees hired in the 90s. Enter a comment with the number of employees returned.
 
 SELECT * 
@@ -69,15 +74,15 @@ WHERE (hire_date BETWEEN '1990-01-01' AND '1999-12-31'); /*   AND (last_name LIK
 
 SELECT * 
 FROM employees 
-WHERE birth_date LIKE '%-12-%';
--- 25326
+WHERE birth_date LIKE '%-12-25';
+-- 842
 
 -- Find all current or previous employees hired in the 90s and born on Christmas. Enter a comment with the number of employees returned.
 
 SELECT * 
 FROM employees 
-WHERE (hire_date BETWEEN '1990-01-01' AND '1999-12-31') AND (birth_date LIKE '%-12-%');
--- 11339
+WHERE (hire_date LIKE '199%') AND (hire_date LIKE '%-12-25%');
+-- 346
 
 -- Find all current or previous employees with a 'q' in their last name. Enter a comment with the number of records returned.
 
