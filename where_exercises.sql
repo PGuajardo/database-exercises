@@ -2,6 +2,8 @@ USE employees;
 
 -- Find all current or previous employees with first names 'Irena', 'Vidya', or 'Maya' using IN. Enter a comment with the number of records returned.
 DESCRIBE employees;
+SELECT hire_date from employees;
+
 SELECT gender FROM employees;
 SELECT COUNT(first_name) AS 'Records of Names', first_name 
 FROM employees WHERE first_name IN ('Irena','Vidya','Maya')
@@ -38,14 +40,26 @@ GROUP BY last_name;
 -- Find all current or previous employees whose last name starts or ends with 'E'. Enter a comment with the number of employees whose last name starts or ends with E. How many employees have a last name that ends with E, but does not start with E?
 
 SELECT last_name FROM employees WHERE last_name LIKE 'E%' OR last_name LIKE '%E';
+-- 30723
+-- 24393 with names that end with e but dont stat with e
 
 -- Find all current or previous employees employees whose last name starts and ends with 'E'. Enter a comment with the number of employees whose last name starts and ends with E. How many employees' last names end with E, regardless of whether they start with E?
 
+SELECT * from employees where last_name LIKE 'E%' AND last_name LIKE '%E';
+-- 899
 -- Find all current or previous employees hired in the 90s. Enter a comment with the number of employees returned.
 
+SELECT * FROM employees WHERE hire_date >= '1990-01-01' AND (last_name LIKE 'E%') AND (last_name LIKE '%E');
+-- 389
 -- Find all current or previous employees born on Christmas. Enter a comment with the number of employees returned.
 
+SELECT * FROM employees WHERE birth_date LIKE '%-12-%';
+-- 25326
+
 -- Find all current or previous employees hired in the 90s and born on Christmas. Enter a comment with the number of employees returned.
+
+SELECT * FROM employees WHERE (hire_date >= '1990-01-01') AND (birth_date LIKE '%-12-%');
+-- 11339
 
 -- Find all current or previous employees with a 'q' in their last name. Enter a comment with the number of records returned.
 

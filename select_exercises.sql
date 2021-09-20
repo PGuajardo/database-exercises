@@ -6,15 +6,15 @@ DESCRIBE albums;
 -- 3
 -- a. How many rows are in the albums table?
 # 31 Rows
+
 SELECT * FROM albums;
 
 -- b. How many unique artist names are in the albums table?
-# 31
+# 23
 SELECT DISTINCT artist FROM albums;
 
 -- c. What is the primary key for the albums table?
-SELECT id FROM albums;
-
+DESCRIBE albums;
 -- d. What is the oldest release date for any album in the albums table? What is the most recent release date?
 -- SELECT release_date FROM albums WHERE release_date = 2011 AND release_date = 1967;
 SELECT MAX(release_date) AS 'Recent Release', MIN(release_date) AS 'Oldest Release' FROM albums;
@@ -33,7 +33,7 @@ SELECT genre FROM albums WHERE name = 'Nevermind';
 SELECT * FROM albums WHERE release_date > 1990;
 
 -- e. Which albums had less than 20 million certified sales
-SELECT * FROM albums WHERE sales > 20;
+SELECT * FROM albums WHERE sales < 20;
 
 -- f. All the albums with a genre of "Rock". Why do these query results not include albums with a genre of "Hard rock" or "Progressive rock"?
-SELECT * FROM albums WHERE genre = 'Rock';
+SELECT * FROM albums WHERE genre LIKE '%rock%';
