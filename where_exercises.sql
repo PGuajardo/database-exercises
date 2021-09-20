@@ -81,8 +81,8 @@ WHERE birth_date LIKE '%-12-25';
 
 SELECT * 
 FROM employees 
-WHERE (hire_date LIKE '199%') AND (hire_date LIKE '%-12-25%');
--- 346
+WHERE (hire_date LIKE '199%') AND (birth_date LIKE '%-12-25%');
+-- 362
 
 -- Find all current or previous employees with a 'q' in their last name. Enter a comment with the number of records returned.
 
