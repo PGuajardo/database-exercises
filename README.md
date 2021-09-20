@@ -10,5 +10,5 @@
     - This file contains exercises for learning how to excute `Operands: AND OR` `LIKE`
 5. `order_by_exercises.sql`
     - This file contains exercises for learing how to excute `ORDER BY` `ASC` `DESC` and using them to order data.
-6. `limit_exercises.sql'
+6. `limit_exercises.sql`
     - This file contains exercies for learning how to excute `LIMIT` and `OFFSET` and understanding how we can use these commands to create a page of data and how to limit its contents.
