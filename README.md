@@ -8,3 +8,5 @@
     - This file contains exercises for learning onto how to excute and find items in a table via `Select` `Distinct` `FROM` `WHERE` and using operator commands
 4. `where_exercises.sql`
     - This file contains exercises for learning how to excute `Operands: AND OR` `LIKE`
+5. `order_by_exercises.sql`
+    - This file contains exercises for learing how to excute `ORDER BY` `ASC` `DESC` and using them to order data.
