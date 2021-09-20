@@ -39,4 +39,5 @@ SELECT * FROM employees WHERE (last_name LIKE 'E%') AND (last_name LIKE '%E') OR
 SELECT * FROM employees WHERE hire_date BETWEEN '1990-01-01' AND '1999-12-31' ORDER BY birth_date DESC, hire_date DESC;
 -- 135214
 -- Badri Schapire : Youngest Hired last
+SELECT * FROM employees WHERE hire_date BETWEEN '1990-01-01' AND '1999-12-31' ORDER BY birth_date ASC, hire_date ASC;
 -- Eishiro Kuzuoka : Oldest HIred last 
