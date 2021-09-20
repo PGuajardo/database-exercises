@@ -62,8 +62,8 @@ WHERE last_name LIKE 'E%' AND last_name LIKE '%E';
 
 SELECT * 
 FROM employees 
-WHERE hire_date >= '1990-01-01' AND (last_name LIKE 'E%') AND (last_name LIKE '%E');
--- 389
+WHERE (hire_date BETWEEN '1990-01-01' AND '1999-12-31'); /*   AND (last_name LIKE 'E%') AND (last_name LIKE '%E');*/
+-- 135214
 
 -- Find all current or previous employees born on Christmas. Enter a comment with the number of employees returned.
 
@@ -76,7 +76,7 @@ WHERE birth_date LIKE '%-12-%';
 
 SELECT * 
 FROM employees 
-WHERE (hire_date >= '1990-01-01') AND (birth_date LIKE '%-12-%');
+WHERE (hire_date BETWEEN '1990-01-01' AND '1999-12-31') AND (birth_date LIKE '%-12-%');
 -- 11339
 
 -- Find all current or previous employees with a 'q' in their last name. Enter a comment with the number of records returned.
