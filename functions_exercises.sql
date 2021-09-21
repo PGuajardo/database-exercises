@@ -42,11 +42,7 @@ SELECT * FROM employees WHERE hire_date BETWEEN '1990-01-01' AND '1999-12-31' OR
 SELECT * FROM employees WHERE hire_date BETWEEN '1990-01-01' AND '1999-12-31' ORDER BY birth_date ASC, hire_date ASC;
 -- Eishiro Kuzuoka : Oldest HIred last 
 
---
---
 -- function_sql exercises
---
---
 use employees;
 
 -- 1. Write a query to to find all employees whose last name starts and ends with 'E'. Use concat() to combine their first and last name together as a single column named full_name.
@@ -61,18 +57,8 @@ FROM employees
 WHERE last_name LIKE 'E%%E';
 
 -- 3. Find all employees hired in the 90s and born on Christmas. Use datediff() function to find how many days they have been working at the company (Hint: You will also need to use NOW() or CURDATE()),
-use employees;
-SELECT DATEDIFF(CURDATE(), hire_date) FROM employees
-WHERE (hire_date LIKE '199%') AND (birth_date LIKE '%-25');
+SELECT 
 
 -- 4. Find the smallest and largest current salary from the salaries table.
 
-SELECT MIN(salary) AS SmallestSalary, MAX(salary) AS LargestSalary 
-FROM salaries;
-
 -- 5. Use your knowledge of built in SQL functions to generate a username for all of the employees. A username should be all lowercase, and consist of the first character of the employees first name, the first 4 characters of the employees last name, an underscore, the month the employee was born, and the last two digits of the year that they were born. Below is an example of what the first 10 rows will look like:
-
-SELECT LOWER(CONCAT(SUBSTR(first_name,1,1), SUBSTR(last_name,1,4), '_', SUBSTR(CAST(birth_date AS CHAR), 6, 2), SUBSTR(CAST(birth_date AS CHAR), -2))) AS UserName,
-first_name, last_name, birth_date
-FROM employees;
-
