@@ -133,10 +133,41 @@ GROUP BY username;
 
 -- More practice with aggregate functions:
 
-/*Find the historic average salary for all employees. Now determine the current average salary.
-Now find the historic average salary for each employee. Reminder that when you hear "for each" in the problem statement, you'll probably be grouping by that exact column.
-Find the current average salary for each employee.
-Find the maximum salary for each current employee.
-Now find the max salary for each current employee where that max salary is greater than $150,000.
-Find the current average salary for each employee where that average salary is between $80k and $90k.*/
+-- Find the historic average salary for all employees. 
 
+SELECT avg(salary) FROM salaries;
+-- Now determine the current average salary.
+
+SELECT avg(salary) FROM salaries
+WHERE to_date LIKE '9999%';
+
+/*Now find the historic average salary for each employee. Reminder that when you hear "for each" in the problem statement, you'll probably be grouping by that exact column.*/
+
+SELECT AVG(salary) FROM salaries
+GROUP BY salary
+ORDER BY salary ASC;
+
+-- Find the current average salary for each employee.
+
+SELECT avg(salary) FROM salaries
+WHERE to_date LIKE '9999%'
+GROUP BY salary;
+
+-- Find the maximum salary for each current employee.
+
+SELECT MAX(salary) FROM salaries
+WHERE to_date LIKE '9999%'
+GROUP BY salary
+ORDER BY salary DESC;
+
+-- Now find the max salary for each current employee where that max salary is greater than $150,000.
+
+SELECT MAX(salary) FROM salaries
+WHERE to_date LIKE '9999%'
+GROUP BY salary HAVING MAX(salary) > 150000
+ORDER BY salary DESC;
+-- Find the current average salary for each employee where that average salary is between $80k and $90k.
+
+SELECT AVG(salary) FROM salaries
+GROUP BY salary HAVING AVG(salary) BETWEEN 80000 AND 90000
+ORDER BY salary DESC;
