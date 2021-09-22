@@ -89,8 +89,8 @@ FROM titles;
 -- 2. Write a query to to find a list of all unique last names of all employees that start and end with 'E' using GROUP BY.
 
 SELECT /*first_name,*/ last_name FROM employees
-GROUP BY last_name #first_name
-HAVING last_name LIKE 'E%%E';
+WHERE last_name LIKE 'E%' AND last_name LIKE '%E'
+GROUP BY last_name ;#first_name;
 -- 5
 
 -- 3. Write a query to to find all unique combinations of first and last names of all employees whose last names start and end with 'E'.
@@ -110,8 +110,9 @@ HAVING last_name LIKE '%q%' AND last_name NOT LIKE '%qu%';
 
 SELECT last_name, COUNT(last_name) AS COUNT_OF_LAST 
 FROM employees
-GROUP BY last_name;
--- 1637
+GROUP BY last_name
+HAVING last_name LIKE '%q%' AND last_name NOT LIKE '%qu%';
+
 
 -- 6. Find all all employees with first names 'Irena', 'Vidya', or 'Maya'. Use COUNT(*) and GROUP BY to find the number of employees for each gender with those names.
 
@@ -136,6 +137,7 @@ GROUP BY username;
 -- Find the historic average salary for all employees. 
 
 SELECT avg(salary) FROM salaries;
+
 -- Now determine the current average salary.
 
 SELECT avg(salary) FROM salaries
@@ -166,8 +168,10 @@ SELECT MAX(salary) FROM salaries
 WHERE to_date LIKE '9999%'
 GROUP BY salary HAVING MAX(salary) > 150000
 ORDER BY salary DESC;
+
 -- Find the current average salary for each employee where that average salary is between $80k and $90k.
 
-SELECT AVG(salary) FROM salaries
+SELECT AVG(salary) AS AVG_SALARY FROM salaries
+WHERE to_date LIKE '9999%'
 GROUP BY salary HAVING AVG(salary) BETWEEN 80000 AND 90000
 ORDER BY salary DESC;
