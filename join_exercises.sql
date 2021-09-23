@@ -6,26 +6,26 @@ show create table employees;
 
 SELECT d.dept_name AS Department_Name, CONCAT(e.first_name, ' ', e.last_name) AS Department_Manager
 FROM employees AS e
-JOIN dept_manager AS dm ON e.emp_no = dm.emp_no
-JOIN departments AS d  ON d.dept_no = dm.dept_no
+JOIN dept_manager AS dm using(emp_no)
+JOIN departments AS d using(dept_no)
 WHERE dm.to_date > NOW()
 ORDER BY Department_Name ASC;
 
 -- 2. Find the name of all departments currently managed by women.
 SELECT d.dept_name AS Department_Name, CONCAT(e.first_name, ' ', e.last_name) AS Manager_Name
 FROM employees AS e
-JOIN dept_manager AS dm ON e.emp_no = dm.emp_no
-JOIN departments AS d  ON d.dept_no = dm.dept_no
+JOIN dept_manager AS dm using(emp_no)
+JOIN departments AS d using(dept_no)
 WHERE dm.to_date > NOW() AND e.gender = 'F'
 ORDER BY Department_Name ASC;
 
 -- 3. Find the current titles of employees currently working in the Customer Service department.
 SELECT t.title AS Title, COUNT(*) AS Count
 FROM titles AS t
-JOIN employees AS e ON t.emp_no = e.emp_no
-JOIN dept_emp AS de ON de.emp_no = e.emp_no
-JOIN departments AS d ON d.dept_no = de.dept_no
-WHERE t.to_date > NOW() AND d.dept_name = 'Customer Service' AND de.to_date > NOW()
+# JOIN employees AS e ON t.emp_no = e.emp_no
+JOIN dept_emp AS de using(emp_no)
+JOIN departments AS d using(dept_no)
+WHERE t.to_date > NOW() AND de.to_date > NOW() AND d.dept_name LIKE 'Customer%'
 GROUP BY Title 
 ORDER BY Title ASC;
 
@@ -34,9 +34,9 @@ ORDER BY Title ASC;
 
 SELECT d.dept_name AS DEPARTMENT_NAME ,CONCAT(e.first_name, ' ', e.last_name) AS NAME ,s.salary AS SALARY
 FROM employees AS e
-JOIN dept_manager AS dm ON dm.emp_no = e.emp_no
-JOIN departments AS d ON d.dept_no = dm.dept_no
-JOIN salaries AS s ON s.emp_no = e.emp_no
+JOIN dept_manager AS dm using(emp_no)
+JOIN departments AS d using(dept_no)
+JOIN salaries AS s using(emp_no)
 WHERE dm.to_date > CURDATE() AND s.to_date > CURDATE()
 GROUP BY DEPARTMENT_NAME, NAME, SALARY
 ORDER BY DEPARTMENT_NAME ASC;
@@ -45,21 +45,19 @@ ORDER BY DEPARTMENT_NAME ASC;
 -- 5. Find the number of current employees in each department.
 
 -- EMPLOYEES DEPARTMENT
-SELECT  d.dept_no AS dept_no, d.dept_name AS dept_name, COUNT(*) AS num_employees 
-FROM employees AS e
-JOIN dept_emp AS de ON de.emp_no = e.emp_no
-JOIN departments AS d ON d.dept_no = de.dept_no
+SELECT  d.dept_name AS dept_name, COUNT(*) AS num_employees 
+FROM dept_emp AS de
+JOIN departments AS d using(dept_no)
 WHERE de.to_date > CURDATE()
-GROUP BY dept_no, dept_name
-ORDER BY dept_no ASC;
+GROUP BY dept_name
+ORDER BY dept_name ASC;
 
 -- 6. Which department has the highest average salary? Hint: Use current not historic information.
 
 SELECT d.dept_name AS dept_name, AVG(s.salary) AS average_salary
-FROM employees AS e
-JOIN dept_emp AS de ON de.emp_no = e.emp_no
-JOIN departments AS d ON d.dept_no = de.dept_no
-JOIN salaries AS s ON s.emp_no = e.emp_no
+FROM salaries AS s
+JOIN dept_emp AS de using(emp_no)
+JOIN departments AS d using(dept_no)
 WHERE de.to_date > NOW() AND s.to_date > NOW()
 GROUP BY dept_name
 ORDER BY average_salary DESC
@@ -69,10 +67,10 @@ LIMIT 1;
 -- 7. Who is the highest paid employee in the Marketing department?
 
 SELECT e.first_name AS first_name, e.last_name AS last_name
-FROM employees AS e
-JOIN dept_emp AS de ON de.emp_no = e.emp_no
-JOIN departments AS d ON d.dept_no = de.dept_no
-JOIN salaries AS s ON s.emp_no = e.emp_no
+FROM salaries AS s
+JOIN dept_emp AS de using(emp_no)
+JOIN departments AS d using(dept_no)
+JOIN employees AS e using(emp_no)
 WHERE s.to_date > NOW() AND de.to_date > NOW() AND d.dept_name = 'Marketing'
 ORDER BY salary DESC
 LIMIT 1;
