@@ -79,9 +79,9 @@ LIMIT 1;
 
 SELECT e.first_name AS first_name, e.last_name AS last_name, s.salary AS salary, d.dept_name AS dept_name
 FROM employees AS e
-JOIN dept_manager AS dm ON dm.emp_no = e.emp_no
-JOIN departments AS d ON d.dept_no = dm.dept_no
-JOIN salaries AS s ON s.emp_no = e.emp_no
+JOIN dept_manager AS dm using(emp_no)
+JOIN departments AS d using(dept_no)
+JOIN salaries AS s using(emp_no)
 WHERE s.to_date > NOW() AND dm.to_date > NOW()
 ORDER BY salary DESC
 LIMIT 1;
@@ -110,6 +110,13 @@ ORDER BY Manager_Name DESC;
 
 
 
-
+-- BONUS BONUS
+-- 1. Determine the average salary for each department. Use all salary information and round your results.
+SELECT d.dept_name AS dept_name, ROUND(AVG(s.salary), 0) AS average_salary
+FROM salaries AS s
+JOIN dept_emp AS de using(emp_no)
+JOIN departments AS d using(dept_no)
+GROUP BY dept_name
+ORDER BY average_salary DESC;
 
 
