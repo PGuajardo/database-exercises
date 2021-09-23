@@ -145,9 +145,9 @@ WHERE to_date LIKE '9999%';
 
 /*Now find the historic average salary for each employee. Reminder that when you hear "for each" in the problem statement, you'll probably be grouping by that exact column.*/
 
-SELECT AVG(salary) FROM salaries
-GROUP BY salary
-ORDER BY salary ASC;
+SELECT emp_no, AVG(salary) FROM salaries
+GROUP BY emp_no
+ORDER BY AVG(salary) ASC;
 
 -- Find the current average salary for each employee.
 
@@ -157,21 +157,23 @@ GROUP BY salary;
 
 -- Find the maximum salary for each current employee.
 
-SELECT MAX(salary) FROM salaries
+SELECT emp_no, MAX(salary) FROM salaries
 WHERE to_date LIKE '9999%'
-GROUP BY salary
-ORDER BY salary DESC;
+GROUP BY emp_no
+ORDER BY MAX(salary) DESC;
 
 -- Now find the max salary for each current employee where that max salary is greater than $150,000.
 
-SELECT MAX(salary) FROM salaries
+SELECT emp_no, MAX(salary) FROM salaries
 WHERE to_date LIKE '9999%'
-GROUP BY salary HAVING MAX(salary) > 150000
-ORDER BY salary DESC;
+GROUP BY emp_no HAVING MAX(salary) > 150000
+ORDER BY MAX(salary) DESC;
 
 -- Find the current average salary for each employee where that average salary is between $80k and $90k.
 
-SELECT AVG(salary) AS AVG_SALARY FROM salaries
-WHERE to_date LIKE '9999%'
-GROUP BY salary HAVING AVG(salary) BETWEEN 80000 AND 90000
-ORDER BY salary DESC;
+SELECT emp_no, AVG(salary) AS AVG_SALARY FROM salaries
+-- WHERE to_date LIKE '9999%'
+WHERE to_date > NOW()
+GROUP BY emp_no HAVING AVG(salary) BETWEEN 80000 AND 90000
+# HAVING AVG(salary) > 80000 AND AVG(salary) < 90000
+ORDER BY AVG_SALARY DESC;
