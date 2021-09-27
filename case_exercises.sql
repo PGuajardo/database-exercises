@@ -23,12 +23,14 @@ FROM employees;
 
 -- 3. How many employees (current or previous) were born in each decade?
 
-SELECT birth_date,
-	COUNT(CASE birth_date LIKE '195%' THEN 'Born in 1950s') AS '1950s',
-	COUNT(CASE birth_date LIKE '196%' THEN 'Born in 1960s') AS '1960s'
-FROM employees
-GROUP BY birth_date
-ORDER BY birth_date ASC;
+SELECT #birth_date,
+	COUNT(CASE WHEN birth_date LIKE '195%' THEN 'Born in 1950s' ELSE NULL END) AS '1950s',
+	COUNT(CASE WHEN birth_date LIKE '196%' THEN 'Born in 1960s' ELSE NULL END) AS '1960s'
+FROM employees;
+#GROUP BY birth_date
+#ORDER BY birth_date ASC;
 ###BONUS
 
 -- What is the current average salary for each of the following department groups: R&D, Sales & Marketing, Prod & QM, Finance & HR, Customer Service?
+
+
