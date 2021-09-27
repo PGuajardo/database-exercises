@@ -56,16 +56,44 @@ UPDATE payment_with_cents SET amount_in_cents = amount*100;
 
 
 -- DO I MORPH the table itself?
--- UPDATE payment_with_cents SET amount = amount DECIMAL(7,0);
+ALTER TABLE payment_with_cents MODIFY amount INT;
+UPDATE payment_with_cents SET amount = amount*100;
+UPDATE payment_with_cents SET amount = amount_in_cents;
 
+ALTER TABLE payment_with_cents DROP COLUMN amount_in_cents;
 -- 3. Find out how the current average pay in each department compares to the overall, historical average pay. In order to make the comparison easier, you should use the Z-score for salaries. 
 USE employees;
 
 CREATE TEMPORARY TABLE hopper_1543.current_average_pay AS 
-SELECT * FROM salaries
+SELECT dept_name, salary, /*Zscore salary of historic salaries*/(salary - 
+		(
+		SELECT AVG(salary) FROM salaries
+		) 
+    / 
+    	(
+    		(SELECT stddev(salary) FROM salaries)
+    		)
+    						) AS zscore_historic,		
+    	/*Zscore salary of current salaries*/(salary - 
+    		(SELECT AVG(salary) FROM salaries WHERE to_date > NOW()) 
+    / 
+    	(SELECT stddev(salary) FROM salaries WHERE to_date > NOW())
+    	) AS zscore_current
+FROM salaries
 JOIN dept_emp using(emp_no)
-JOIN departments using(dept_no);
+JOIN departments using(dept_no)
+GROUP BY dept_name, salary, zscore_historic, zscore_current;
 
+USE hopper_1543;
+SELECT * FROM current_average_pay;
+
+-- Returns the historic z-scores for each salary
+-- Notice that there are 2 separate scalar subqueries involved
+/*SELECT salary, 
+    (salary - (SELECT AVG(salary) FROM salaries)) 
+    / 
+    (SELECT stddev(salary) FROM salaries) AS zscore
+FROM salaries;*/
 
 -- In terms of salary, what is the best department right now to work for? 
 
