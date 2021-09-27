@@ -30,10 +30,10 @@ FROM employees
 WHERE emp_no IN (
 SELECT emp_no
 FROM dept_emp
-WHERE dept_emp.to_date > now()
+WHERE to_date < now()
 );
 
--- 240124
+-- 85108
 
 
 -- 4. Find all the current department managers that are female. List their names in a comment in your code.
@@ -53,7 +53,8 @@ Select first_name, last_name, AVG(salary)
 FROM salaries
 JOIN employees using(emp_no)
 WHERE salary > (SELECT AVG(salary)
-FROM salaries)
+				FROM salaries) 
+AND to_date > NOW()
 GROUP BY first_name, last_name;
 
 
