@@ -2,12 +2,13 @@
 USE employees;
 -- 1. Find all the current employees with the same hire date as employee 101010 using a sub-query.
 
-SELECT emp_no, hire_date, first_name
+SELECT *
 FROM employees
-WHERE hire_date = (
+JOIN dept_emp using(emp_no)
+WHERE to_date > NOW() AND hire_date = (
 SELECT hire_date
 FROM employees
-WHERE emp_no = 101010
+WHERE emp_no = 101010 AND to_date > NOW()
 );
 
 
@@ -23,17 +24,27 @@ JOIN titles AS t ON t.emp_no = e.emp_no
 WHERE t.to_date > NOW()
 GROUP BY t.title, e.first_name;
 
+
+#different way to answer
+SELECT DISTINCT title
+FROM titles
+WHERE emp_no IN (
+SELECT emp_no
+FROM employees
+JOIN dept_emp using(emp_no)
+WHERE first_name = 'Aamod' AND to_date > NOW());
+
 -- 3. How many people in the employees table are no longer working for the company? Give the answer in a comment in your code.
 
 SELECT COUNT(*)
 FROM employees
-WHERE emp_no IN (
+WHERE emp_no NOT IN (
 SELECT emp_no
 FROM dept_emp
-WHERE to_date < now()
+WHERE to_date > now() #corrected by using "not IN" instead of IN and changing to_date < now() to to_date > now() 
 );
 
--- 85108
+-- 59900
 
 
 -- 4. Find all the current department managers that are female. List their names in a comment in your code.
@@ -43,13 +54,13 @@ FROM employees
 WHERE emp_no IN (
 SELECT emp_no
 FROM dept_manager
-WHERE dept_manager.to_date > now()
+WHERE to_date > now()
 ) AND gender = 'F';
 -- Isamu Legleitner, Karsten Sigstam, Leon DasSarma, Hilary Kambil
 
 -- 5. Find all the employees who currently have a higher salary than the companies overall, historical average salary.
 
-Select first_name, last_name, AVG(salary)
+Select first_name, last_name
 FROM salaries
 JOIN employees using(emp_no)
 WHERE salary > (SELECT AVG(salary)
@@ -57,6 +68,12 @@ WHERE salary > (SELECT AVG(salary)
 AND to_date > NOW()
 GROUP BY first_name, last_name;
 
+# ANSWER
+SELECT * FROM employees WHERE emp_no IN (
+	SELECT emp_no FROM salaries WHERE salary > (
+		SELECT AVG(salary) FROM salaries
+	)
+);
 
 -- 6. How many current salaries are within 1 standard deviation of the current highest salary? (Hint: you can use a built in function to calculate the standard deviation.) What percentage of all salaries is this?
 
