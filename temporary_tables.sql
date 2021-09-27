@@ -78,23 +78,31 @@ SELECT dept_name, salary, /*Zscore salary of historic salaries*/(salary -
     		(SELECT AVG(salary) FROM salaries WHERE to_date > NOW()) 
     / 
     	(SELECT stddev(salary) FROM salaries WHERE to_date > NOW())
-    	) AS zscore_current
+    	) AS zscore_current,
+    	 /*Difference in Z scores */((salary - 
+    		(SELECT AVG(salary) FROM salaries WHERE to_date > NOW()) 
+    / 
+    	(SELECT stddev(salary) FROM salaries WHERE to_date > NOW())
+    	) - /*Zscore salary of historic salaries*/(salary - 
+		(
+		SELECT AVG(salary) FROM salaries
+		) 
+    / 
+    	(
+    		(SELECT stddev(salary) FROM salaries)
+    		)
+    						)) AS difference_of_z.  # this is z current differnce with z historic
 FROM salaries
 JOIN dept_emp using(emp_no)
 JOIN departments using(dept_no)
-GROUP BY dept_name, salary, zscore_historic, zscore_current;
+GROUP BY dept_name, salary, zscore_historic, zscore_current, difference_of_z;
 
 USE hopper_1543;
 SELECT * FROM current_average_pay;
 
--- Returns the historic z-scores for each salary
--- Notice that there are 2 separate scalar subqueries involved
-/*SELECT salary, 
-    (salary - (SELECT AVG(salary) FROM salaries)) 
-    / 
-    (SELECT stddev(salary) FROM salaries) AS zscore
-FROM salaries;*/
 
 -- In terms of salary, what is the best department right now to work for? 
+-- Sales:158220 
 
 -- The worst?
+-- Production: 38623
