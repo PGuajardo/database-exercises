@@ -41,10 +41,11 @@ SELECT dept_name,
            WHEN dept_name IN ('Production', 'Quality Management') THEN 'Prod & QM'
            ELSE dept_name
            END AS dept_group,
-           CASE
-           	WHEN dept_group = 'R&D' THEN AVG(salary)           		WHEN dept_group = 'Customer Service' THEN AVG(salary)           		WHEN dept_group = 'Finance' THEN AVG(salary)           		WHEN dept_group = 'Human Resources' THEN AVG(salary)           		WHEN dept_group = 'Sales & Marketing' THEN AVG(salary)
-           	ELSE dept_group
-           	END AS Average_Salary
+       CASE
+           WHEN dept_name IN ('research', 'development', 'Human Resources', 'sales', 'marketing', 'production', 'quality management', 'finance', 'customer service') THEN AVG(salary)
+           ELSE dept_name
+           END AS Average_Salary
 FROM departments
 JOIN dept_emp using(dept_no)
-JOIN salaries using(emp_no);
+JOIN salaries using(emp_no)
+GROUP BY dept_name;
