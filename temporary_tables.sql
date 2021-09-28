@@ -67,7 +67,7 @@ USE employees;
 #Creating a. temporary table
 # with just departments and their respective average salaries
 CREATE TEMPORARY TABLE hopper_1543.current_average_pay AS
-SELECT dept_name, AVG(salary) AS Current_AVG, STDDEV(salary) AS Standard_Deviation
+SELECT dept_name, AVG(salary) AS Current_AVG #STDDEV(salary) AS Standard_Deviation
 FROM salaries
 JOIN dept_emp using(emp_no)
 JOIN departments using(dept_no)
@@ -79,9 +79,11 @@ USE hopper_1543;
 SELECT * FROM current_average_pay;
 
 # CREATED Z SCORE Table and historic averagae
+# CREATE HISTORIC AVG
+# CREATE HISTORIC DIVATION COLUMNS
 ALTER TABLE current_average_pay ADD Historic_Avg DECIMAL(14,4);
-ALTER TABLE current_average_pay ADD Z_SCORE FLOAT;
 ALTER TABLE current_average_pay ADD Historic_STDDEV DOUBLE;
+ALTER TABLE current_average_pay ADD Z_SCORE FLOAT;
 
 #Changing table
 # Create table with historic values with another temporary table
@@ -103,6 +105,8 @@ UPDATE current_average_pay a, historic_average_stddev b SET a.Historic_STDDEV = 
 # setting z score with those averages
 UPDATE current_average_pay SET Z_SCORE = (Current_AVG - Historic_Avg) / Historic_STDDEV;
 
+# VIEW the table
+SELECT * FROM current_average_pay;
 DESCRIBE current_average_pay;
 -- In terms of salary, what is the best department right now to work for? The worst?
 -- Sales, the worst is human resources
