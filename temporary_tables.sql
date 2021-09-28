@@ -55,7 +55,6 @@ ALTER TABLE payment_with_cents ADD amount_in_cents INT(10);
 UPDATE payment_with_cents SET amount_in_cents = amount*100;
 
 
--- DO I MORPH the table itself?
 ALTER TABLE payment_with_cents MODIFY amount INT;
 UPDATE payment_with_cents SET amount = amount*100;
 UPDATE payment_with_cents SET amount = amount_in_cents;
@@ -64,45 +63,49 @@ ALTER TABLE payment_with_cents DROP COLUMN amount_in_cents;
 -- 3. Find out how the current average pay in each department compares to the overall, historical average pay. In order to make the comparison easier, you should use the Z-score for salaries. 
 USE employees;
 
-CREATE TEMPORARY TABLE hopper_1543.current_average_pay AS 
-SELECT dept_name, salary, /*Zscore salary of historic salaries*/(salary - 
-		(
-		SELECT AVG(salary) FROM salaries
-		) 
-    / 
-    	(
-    		(SELECT stddev(salary) FROM salaries)
-    		)
-    						) AS zscore_historic,		
-    	/*Zscore salary of current salaries*/(salary - 
-    		(SELECT AVG(salary) FROM salaries WHERE to_date > NOW()) 
-    / 
-    	(SELECT stddev(salary) FROM salaries WHERE to_date > NOW())
-    	) AS zscore_current,
-    	 /*Difference in Z scores */((salary - 
-    		(SELECT AVG(salary) FROM salaries WHERE to_date > NOW()) 
-    / 
-    	(SELECT stddev(salary) FROM salaries WHERE to_date > NOW())
-    	) - /*Zscore salary of historic salaries*/(salary - 
-		(
-		SELECT AVG(salary) FROM salaries
-		) 
-    / 
-    	(
-    		(SELECT stddev(salary) FROM salaries)
-    		)
-    						)) AS difference_of_z.  # this is z current differnce with z historic
+
+#Creating a. temporary table
+# with just departments and their respective average salaries
+CREATE TEMPORARY TABLE hopper_1543.current_average_pay AS
+SELECT dept_name, AVG(salary) AS Current_AVG, STDDEV(salary) AS Standard_Deviation
 FROM salaries
 JOIN dept_emp using(emp_no)
 JOIN departments using(dept_no)
-GROUP BY dept_name, salary, zscore_historic, zscore_current, difference_of_z;
+WHERE dept_emp.to_date > NOW() AND salaries.to_date > NOW()
+GROUP BY dept_name;
+
 
 USE hopper_1543;
 SELECT * FROM current_average_pay;
 
+# CREATED Z SCORE Table and historic averagae
+ALTER TABLE current_average_pay ADD Historic_Avg DECIMAL(14,4);
+ALTER TABLE current_average_pay ADD Z_SCORE FLOAT;
+ALTER TABLE current_average_pay ADD Historic_STDDEV DOUBLE;
 
--- In terms of salary, what is the best department right now to work for? 
--- Sales:158220 
+#Changing table
+# Create table with historic values with another temporary table
+#
+#
+USE employees;
+CREATE TEMPORARY TABLE hopper_1543.historic_average_stddev AS
+SELECT dept_name, AVG(salary) AS Hisoric_avg, STDDEV(salary) AS historic_Deviation
+FROM salaries
+JOIN dept_emp using(emp_no)
+JOIN departments using(dept_no)
+GROUP BY dept_name;
 
--- The worst?
--- Production: 38623
+USE hopper_1543;
+SELECT * FROM historic_average_stddev;
+
+# Setting Historic Avg with other temporary table
+UPDATE current_average_pay a, historic_average_stddev b SET a.Historic_Avg = b.Hisoric_avg WHERE a.dept_name = b.dept_name;
+# SETTING stddev with other temporary table
+UPDATE current_average_pay a, historic_average_stddev b SET a.Historic_STDDEV = b.historic_Deviation WHERE a.dept_name = b.dept_name;
+# setting z score with those averages
+UPDATE current_average_pay SET Z_SCORE = (Current_AVG - Historic_Avg) / Standard_Deviation;
+
+DESCRIBE current_average_pay;
+-- In terms of salary, what is the best department right now to work for? The worst?
+-- Sales, the worst is human resources
+

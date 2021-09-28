@@ -34,3 +34,17 @@ FROM employees;
 -- What is the current average salary for each of the following department groups: R&D, Sales & Marketing, Prod & QM, Finance & HR, Customer Service?
 
 
+SELECT dept_name,
+       CASE 
+           WHEN dept_name IN ('research', 'development') THEN 'R&D'
+           WHEN dept_name IN ('sales', 'marketing') THEN 'Sales & Marketing' 
+           WHEN dept_name IN ('Production', 'Quality Management') THEN 'Prod & QM'
+           ELSE dept_name
+           END AS dept_group,
+           CASE
+           	WHEN dept_group = 'R&D' THEN AVG(salary)           		WHEN dept_group = 'Customer Service' THEN AVG(salary)           		WHEN dept_group = 'Finance' THEN AVG(salary)           		WHEN dept_group = 'Human Resources' THEN AVG(salary)           		WHEN dept_group = 'Sales & Marketing' THEN AVG(salary)
+           	ELSE dept_group
+           	END AS Average_Salary
+FROM departments
+JOIN dept_emp using(dept_no)
+JOIN salaries using(emp_no);
