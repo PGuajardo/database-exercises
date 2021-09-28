@@ -85,25 +85,23 @@ ALTER TABLE current_average_pay ADD Historic_STDDEV DOUBLE;
 
 #Changing table
 # Create table with historic values with another temporary table
-#
+# HISTORIC AVERAGE SALARY and HISTORIC DEVIATION
 #
 USE employees;
 CREATE TEMPORARY TABLE hopper_1543.historic_average_stddev AS
-SELECT dept_name, AVG(salary) AS Hisoric_avg, STDDEV(salary) AS historic_Deviation
-FROM salaries
-JOIN dept_emp using(emp_no)
-JOIN departments using(dept_no)
-GROUP BY dept_name;
+SELECT AVG(salary) AS Hisoric_avg, STDDEV(salary) AS historic_Deviation
+FROM salaries;
 
+#CHECK new created table
 USE hopper_1543;
 SELECT * FROM historic_average_stddev;
 
-# Setting Historic Avg with other temporary table
-UPDATE current_average_pay a, historic_average_stddev b SET a.Historic_Avg = b.Hisoric_avg WHERE a.dept_name = b.dept_name;
-# SETTING stddev with other temporary table
-UPDATE current_average_pay a, historic_average_stddev b SET a.Historic_STDDEV = b.historic_Deviation WHERE a.dept_name = b.dept_name;
+# Setting Historic Avg with other temporary table historic avg
+UPDATE current_average_pay a, historic_average_stddev b SET a.Historic_Avg = b.Hisoric_avg; #WHERE a.dept_name = b.dept_name;
+# SETTING stddev with other temporary table historic stddev 
+UPDATE current_average_pay a, historic_average_stddev b SET a.Historic_STDDEV = b.historic_Deviation; #WHERE a.dept_name = b.dept_name;
 # setting z score with those averages
-UPDATE current_average_pay SET Z_SCORE = (Current_AVG - Historic_Avg) / Standard_Deviation;
+UPDATE current_average_pay SET Z_SCORE = (Current_AVG - Historic_Avg) / Historic_STDDEV;
 
 DESCRIBE current_average_pay;
 -- In terms of salary, what is the best department right now to work for? The worst?
