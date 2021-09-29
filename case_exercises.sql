@@ -11,13 +11,9 @@ JOIN dept_emp using(emp_no);
 
 SELECT first_name, last_name,
 	CASE
-		WHEN last_name LIKE 'A%' OR last_name LIKE 'B%' OR last_name LIKE 'C%' OR last_name LIKE 'D%' OR last_name LIKE 'E%' OR last_name LIKE 'F%' OR last_name LIKE 'G%' 
-			OR last_name LIKE 'H%' THEN 'A-H'
-		WHEN last_name LIKE 'I%' OR last_name LIKE 'J%' OR last_name LIKE 'K%' OR last_name LIKE 'L%' OR last_name LIKE 'M%' OR last_name LIKE 'N%' OR last_name LIKE 'O%'
-			OR last_name LIKE 'P%' OR last_name LIKE 'Q%' THEN 'I-Q'
-		WHEN last_name LIKE 'R%' OR last_name LIKE 'S%' OR last_name LIKE 'T%' OR last_name LIKE 'U%' OR last_name LIKE 'V%' OR last_name LIKE 'W%' OR last_name LIKE 'X%'
-			OR last_name LIKE 'Y%' OR last_name LIKE 'Z%' THEN 'R-Z'
-		ELSE 'OTHER'
+		WHEN last_name BETWEEN 'A%' AND 'H%' THEN 'A-H'
+		WHEN last_name BETWEEN 'I%' AND 'Q%' THEN 'I-Q'
+		ELSE 'R-Z'
 		END AS alpha_group
 FROM employees;
 
@@ -34,18 +30,16 @@ FROM employees;
 -- What is the current average salary for each of the following department groups: R&D, Sales & Marketing, Prod & QM, Finance & HR, Customer Service?
 
 
-SELECT dept_name,
+SELECT AVG(salary) AS Average_Salary,
        CASE 
            WHEN dept_name IN ('research', 'development') THEN 'R&D'
            WHEN dept_name IN ('sales', 'marketing') THEN 'Sales & Marketing' 
            WHEN dept_name IN ('Production', 'Quality Management') THEN 'Prod & QM'
            ELSE dept_name
-           END AS dept_group,
-       CASE
-           WHEN dept_name IN ('research', 'development', 'Human Resources', 'sales', 'marketing', 'production', 'quality management', 'finance', 'customer service') THEN AVG(salary)
-           ELSE dept_name
-           END AS Average_Salary
+           END AS dept_group
 FROM departments
 JOIN dept_emp using(dept_no)
 JOIN salaries using(emp_no)
-GROUP BY dept_name;
+WHERE salaries.to_date > NOW() AND dept_emp.to_date > NOW()
+GROUP BY dept_group
+ORDER BY dept_group;
